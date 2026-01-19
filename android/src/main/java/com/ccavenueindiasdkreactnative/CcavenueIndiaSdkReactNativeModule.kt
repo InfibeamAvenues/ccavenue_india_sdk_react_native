@@ -3,11 +3,9 @@ package com.ccavenueindiasdkreactnative
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.*
+import java.io.Serializable
+import java.util.HashMap
 
 // Alias class for static access
 class CcavenueIndiaSdkPlugin {
@@ -25,8 +23,8 @@ class CcavenueIndiaSdkReactNativeModule(reactContext: ReactApplicationContext) :
     fun payCCAvenue(params: ReadableMap, promise: Promise) {
         Log.d("CCAvenueModule", "payCCAvenue called with params: $params")
         
-        val currentActivity = getCurrentActivity()
-        if (currentActivity == null) {
+        val activity: Activity? = getCurrentActivity()
+        if (activity == null) {
             Log.e("CCAvenueModule", "Activity is null")
             promise.reject("ACTIVITY_ERROR", "Activity doesn't exist")
             return
@@ -41,25 +39,55 @@ class CcavenueIndiaSdkReactNativeModule(reactContext: ReactApplicationContext) :
         }
 
         try {
-            val intent = Intent(currentActivity, CCAvenueWrapperActivity::class.java)
+            val intent: Intent = Intent(activity, CCAvenueWrapperActivity::class.java)
             
-            // Required fields
-            intent.putExtra("accessCode", params.getString("accessCode") ?: "")
-            intent.putExtra("amount", params.getString("amount") ?: "")
-            intent.putExtra("currency", params.getString("currency") ?: "INR")
-            intent.putExtra("trackingId", params.getString("trackingId") ?: "")
-            intent.putExtra("requestHash", params.getString("requestHash") ?: "")
+            // 1. Core Parameters
+            intent.putExtra("accessCode", if (params.hasKey("accessCode")) params.getString("accessCode") else "")
+            intent.putExtra("amount", if (params.hasKey("amount")) params.getString("amount") else "")
+            intent.putExtra("currency", if (params.hasKey("currency")) params.getString("currency") else "INR")
+            intent.putExtra("trackingId", if (params.hasKey("trackingId")) params.getString("trackingId") else "")
+            intent.putExtra("requestHash", if (params.hasKey("requestHash")) params.getString("requestHash") else "")
             
-            // Optional fields
-            intent.putExtra("payment_type", params.getString("paymentType") ?: "all")
-            intent.putExtra("payment_environment", params.getString("environment") ?: "app_local")
-            intent.putExtra("customer_id", if (params.hasKey("customerId")) params.getString("customerId") ?: "" else "")
+            // 2. Optional UI & Logic Parameters
+            intent.putExtra("customer_id", if (params.hasKey("customer_id")) params.getString("customer_id") else if (params.hasKey("customerId")) params.getString("customerId") else "")
+            intent.putExtra("payment_type", if (params.hasKey("payment_type")) params.getString("payment_type") else if (params.hasKey("paymentType")) params.getString("paymentType") else "all")
+            intent.putExtra("ignore_payment_option", if (params.hasKey("ignore_payment_option")) params.getString("ignore_payment_option") else if (params.hasKey("ignorePaymentOption")) params.getString("ignorePaymentOption") else "")
             
-            // Customization
-            intent.putExtra("app_color", if (params.hasKey("appColor")) params.getString("appColor") ?: "" else "")
-            intent.putExtra("font_color", if (params.hasKey("fontColor")) params.getString("fontColor") ?: "" else "")
+            // Convert boolean to Boolean wrapper or primitive? putExtra handles Boolean.
+            intent.putExtra("display_promo", if (params.hasKey("display_promo")) params.getBoolean("display_promo") else if (params.hasKey("displayPromo")) params.getBoolean("displayPromo") else true)
+            intent.putExtra("promo_code", if (params.hasKey("promo_code")) params.getString("promo_code") else if (params.hasKey("promoCode")) params.getString("promoCode") else "")
+            intent.putExtra("promo_sku_code", if (params.hasKey("promo_sku_code")) params.getString("promo_sku_code") else if (params.hasKey("promoSkuCode")) params.getString("promoSkuCode") else "")
+            intent.putExtra("display_dialog", if (params.hasKey("display_dialog")) params.getString("display_dialog") else if (params.hasKey("displayDialog")) params.getString("displayDialog") else "FULL")
             
-            currentActivity.startActivity(intent)
+            // 3. Environment & Styling
+            intent.putExtra("payment_environment", if (params.hasKey("payment_environment")) params.getString("payment_environment") else if (params.hasKey("environment")) params.getString("environment") else "LIVE")
+            intent.putExtra("app_color", if (params.hasKey("app_color")) params.getString("app_color") else if (params.hasKey("appColor")) params.getString("appColor") else "#1F46BD")
+           intent.putExtra("font_color", if (params.hasKey("font_color")) params.getString("font_color") else if (params.hasKey("fontColor")) params.getString("fontColor") else "#FFFFFF")
+
+            // 4. Handle Nested SIInfo
+            if (params.hasKey("si_info") && !params.isNull("si_info")) {
+                val siInfoMap = params.getMap("si_info")
+                val siHashMap = HashMap<String, String?>()
+                
+                val iterator = siInfoMap!!.keySetIterator()
+                while (iterator.hasNextKey()) {
+                    val key = iterator.nextKey()
+                    siHashMap[key] = siInfoMap.getString(key)
+                }
+                intent.putExtra("si_info", siHashMap as Serializable)
+            } else if (params.hasKey("siInfo") && !params.isNull("siInfo")) {
+                 val siInfoMap = params.getMap("siInfo")
+                 val siHashMap = HashMap<String, String?>()
+                 
+                 val iterator = siInfoMap!!.keySetIterator()
+                 while (iterator.hasNextKey()) {
+                     val key = iterator.nextKey()
+                     siHashMap[key] = siInfoMap.getString(key)
+                 }
+                 intent.putExtra("si_info", siHashMap as Serializable)
+            }
+            
+            activity.startActivity(intent)
             
         } catch (e: Exception) {
             Log.e("CCAvenueModule", "Exception validating params or launching activity", e)

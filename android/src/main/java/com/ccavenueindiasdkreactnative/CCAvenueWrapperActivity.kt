@@ -8,39 +8,41 @@ import com.ccavenue.indiasdk.CCAvenueOrder
 import com.ccavenue.indiasdk.CCAvenueSDK
 import com.ccavenue.indiasdk.CCAvenueTransactionCallback
 import com.ccavenue.indiasdk.model.CCAvenueResponseCallback
-
+ 
 class CCAvenueWrapperActivity : AppCompatActivity(), CCAvenueTransactionCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // No custom UI
         handleIntent()
     }
 
     private fun handleIntent() {
+        // 1. Core Parameters
         val amount = intent.getStringExtra("amount") ?: ""
         val currency = intent.getStringExtra("currency") ?: "INR"
         val trackingId = intent.getStringExtra("trackingId") ?: ""
         val requestHash = intent.getStringExtra("requestHash") ?: ""
         val accessCode = intent.getStringExtra("accessCode") ?: ""
-        // val merchantId = intent.getStringExtra("mId") ?: "" // If used by SDK in future
-        val orderId = intent.getStringExtra("order_id") ?: ""
+        
+        // 2. Optional / UI Parameters
         val customerId = intent.getStringExtra("customer_id") ?: ""
-
         val paymentType = intent.getStringExtra("payment_type") ?: "all"
-        val rawEnv = intent.getStringExtra("payment_environment") ?: "app_local"
+        val ignorePaymentOption = intent.getStringExtra("ignore_payment_option") ?: ""
+        val promoCode = intent.getStringExtra("promo_code") ?: ""
+        val promoSkuCode = intent.getStringExtra("promo_sku_code") ?: ""
+        val displayDialog = intent.getStringExtra("display_dialog") ?: "FULL"
+        val displayPromo = intent.getBooleanExtra("display_promo", true)
+        val appColor = intent.getStringExtra("app_color") ?: "#1F46BD"
+        val fontColor = intent.getStringExtra("font_color") ?: "#FFFFFF"
+
+        // 3. Environment Mapping
+        val rawEnv = intent.getStringExtra("payment_environment") ?: "LIVE"
         val paymentEnvironment = when (rawEnv.uppercase()) {
             "LOCAL" -> "app_local"
             "STAGING" -> "test"
             "LIVE" -> "live"
-            else -> rawEnv
+            else -> "live"
         }
-        Log.d("CCAvenueWrapper", "Mapped Environment: $rawEnv -> $paymentEnvironment")
-        val appColor = intent.getStringExtra("app_color") ?: ""
-        val fontColor = intent.getStringExtra("font_color") ?: ""
-        val displayPromo = intent.getBooleanExtra("display_promo", true)
-
-        Log.d("CCAvenueWrapper", "Launching Payment for TrackingID: $trackingId")
 
         try {
             val orderDetails = CCAvenueOrder()
@@ -53,17 +55,37 @@ class CCAvenueWrapperActivity : AppCompatActivity(), CCAvenueTransactionCallback
             orderDetails.paymentType = paymentType
             orderDetails.paymentEnvironment = paymentEnvironment
             
-            if (appColor.isNotEmpty()) {
-                orderDetails.appColor = appColor
+            // New Fields
+            orderDetails.ignorePaymentType = ignorePaymentOption
+            orderDetails.promoCode = promoCode
+            orderDetails.promoSkuCode = promoSkuCode
+            orderDetails.displayPromo = if (displayPromo) "true" else "false"
+            orderDetails.displayDialog = displayDialog
+            orderDetails.appColor = appColor
+            orderDetails.fontColor = fontColor
+
+            // 4. Handle Nested SIInfo
+            val siMap = intent.getSerializableExtra("si_info") as? Map<String, String?>
+            if (siMap != null) {
+                orderDetails.siStartDate = siMap["si_start_date"]
+                orderDetails.siEndDate = siMap["si_end_date"]
+                orderDetails.siType = siMap["si_type"]
+                orderDetails.siAmount = siMap["si_amount"]
+                orderDetails.siMerRefNo = siMap["si_merchant_ref_no"]
+                orderDetails.siIsSetupAmt = siMap["si_setup_amount"]
+                orderDetails.siBillCycle = siMap["si_bill_cycle"]
+                orderDetails.siFrequency = siMap["si_frequency"]
+                orderDetails.siFrequencyType = siMap["si_frequency_type"]
+                orderDetails.SI_UpIMandateExecute = siMap["si_upi_mandate"]
+                orderDetails.SI_UpiDebitRule = siMap["si_upi_debit_rule"]
+                
             }
-            if (fontColor.isNotEmpty()) {
-                orderDetails.fontColor = fontColor
-            }
-           
-           CCAvenueSDK.initTransaction(this, orderDetails)
+
+            Log.d("CCAvenueWrapper", "Launching Payment Environment: $paymentEnvironment")
+            CCAvenueSDK.initTransaction(this, orderDetails)
 
         } catch (e: Exception) {
-            Log.e("CCAvenueWrapper", "Init Error", e)
+            Log.e("CCAvenueWrapper", "Initialization Error", e)
             CcavenueIndiaSdkPlugin.onError?.invoke(e.toString())
             finish()
         }

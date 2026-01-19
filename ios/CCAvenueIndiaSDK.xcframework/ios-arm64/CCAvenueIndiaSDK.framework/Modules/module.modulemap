@@ -1,0 +1,4 @@
+framework module CCAvenueIndiaSDK {
+  header "CCAvenueIndiaSDK-Swift.h"
+  requires objc
+}

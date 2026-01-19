@@ -1,0 +1,74 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.2.3 effective-5.10 (swiftlang-6.2.3.3.21 clang-1700.6.3.2)
+// swift-module-flags: -target arm64-apple-ios15.6 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name CCAvenueIndiaSDK
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.2.3
+import CommonCrypto
+import CommonLibrary
+import CoreText
+import CryptoKit
+import Foundation
+import MessageUI
+import Security
+import Swift
+import SystemConfiguration
+import UIKit
+import WebKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+extension UIKit.UIColor {
+  convenience public init(r: CoreFoundation.CGFloat, g: CoreFoundation.CGFloat, b: CoreFoundation.CGFloat)
+  convenience public init(r: CoreFoundation.CGFloat, g: CoreFoundation.CGFloat, b: CoreFoundation.CGFloat, a: CoreFoundation.CGFloat)
+}
+@objc public protocol CCAvenueDelegate {
+  #if compiler(>=5.3) && $NonescapableTypes
+  @objc func onTransactionResponse(_ jsonResponse: [Swift.AnyHashable : Any]?)
+  #endif
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor @preconcurrency public class CCAvenueViewController : UIKit.UIViewController {
+  @_Concurrency.MainActor @preconcurrency convenience public init(ccAvenueOrder: CCAvenueIndiaSDK.CCAvenueOrder, andDelegate delegate: any CCAvenueIndiaSDK.CCAvenueDelegate)
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public func viewDidLoad()
+  #if compiler(>=5.3) && $NonescapableTypes
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  @_Concurrency.MainActor @preconcurrency @objc required dynamic public init?(coder: Foundation.NSCoder)
+  #endif
+  @objc deinit
+}
+public struct CCAvenueOrder {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init(accessCode: Swift.String, currency: Swift.String, amount: Swift.String, trackingId: Swift.String, requestHash: Swift.String, paymentEnviroment: CCAvenueIndiaSDK.Enviroment = .LIVE, paymentType: Swift.String = "all", ignorePaymentType: Swift.String = "", customerId: Swift.String = "", displayPromo: Swift.Bool = true, promoCode: Swift.String = "", promoSkuCode: Swift.String = "", siInfo: CCAvenueIndiaSDK.SIInfo? = nil, appColor: Swift.String = "#1F46BD", fontColor: Swift.String = "#FFFFFF", displayDialog: CCAvenueIndiaSDK.DisplayDialog = .FULL)
+  #endif
+}
+public struct SIInfo {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init(siStartDate: Swift.String?, siEndDate: Swift.String?, siType: Swift.String?, siAmount: Swift.String?, siMerchantRefNo: Swift.String?, siSetupAmount: Swift.String?, siBillCycle: Swift.String?, siFrequency: Swift.String?, siFrequencyType: Swift.String?, siUPIMandate: Swift.String?, siUPIDebitRule: Swift.String?)
+  #endif
+}
+public enum DisplayDialog {
+  case FULL
+  case DIALOG
+  public static func == (a: CCAvenueIndiaSDK.DisplayDialog, b: CCAvenueIndiaSDK.DisplayDialog) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum Enviroment : Swift.String {
+  case LOCAL
+  case STAGING
+  case LIVE
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init?(rawValue: Swift.String)
+  #endif
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension CCAvenueIndiaSDK.DisplayDialog : Swift.Equatable {}
+extension CCAvenueIndiaSDK.DisplayDialog : Swift.Hashable {}
+extension CCAvenueIndiaSDK.Enviroment : Swift.Equatable {}
+extension CCAvenueIndiaSDK.Enviroment : Swift.Hashable {}
+extension CCAvenueIndiaSDK.Enviroment : Swift.RawRepresentable {}

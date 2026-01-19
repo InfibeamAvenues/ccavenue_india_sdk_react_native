@@ -1,7 +1,7 @@
 buildscript {
     ext {
         buildToolsVersion = "36.0.0"
-        minSdkVersion = 24
+        minSdkVersion = 26
         compileSdkVersion = 36
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
@@ -17,5 +17,58 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
     }
 }
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { instr ->
+        localProperties.load(instr)
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+
+        // CCAvenue SDK 2.0
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/InfibeamAvenues/CCAvenue_SDK_2.0_UAT")
+            credentials {
+                username = localProperties.getProperty("gpr.usr") ?: "InfibeamAvenues"
+                password = localProperties.getProperty("gpr.key") ?: ""
+            }
+        }
+
+        // CCAvenue Tappay SDK
+        maven {
+            name = "GitHubPackagesTappay"
+            url = uri("https://maven.pkg.github.com/uvik-technology/CCAvenue_tappay_sdk")
+            credentials {
+                username = localProperties.getProperty("sdk.username") ?: ""
+                password = localProperties.getProperty("sdk.pwd") ?: ""
+            }
+        }
+
+        // DexGuard Repository
+        maven {
+            url = uri("https://maven.guardsquare.com")
+            credentials {
+                username = localProperties.getProperty("dexguardMavenUser") ?: ""
+                password = localProperties.getProperty("dexguardMavenPassword") ?: ""
+            }
+            content {
+                includeGroupByRegex("com\\.guardsquare.*")
+            }
+            authentication {
+                // 'create' is for Kotlin DSL; in Groovy use 'basic'
+                basic(BasicAuthentication)
+            }
+        }
+    }
+}
+
 
 apply plugin: "com.facebook.react.rootproject"

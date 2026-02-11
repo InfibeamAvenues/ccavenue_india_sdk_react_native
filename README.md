@@ -4,14 +4,11 @@ ccavenue payment gateway
 
 ## Installation
 
-
 ```sh
 npm install react-native-ccavenue-india-sdk-react-native
 ```
 
-
 ## Usage
-
 
 ```js
 import { multiply } from 'react-native-ccavenue-india-sdk-react-native';
@@ -20,7 +17,6 @@ import { multiply } from 'react-native-ccavenue-india-sdk-react-native';
 
 const result = multiply(3, 7);
 ```
-
 
 ## Contributing
 

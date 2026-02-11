@@ -15,6 +15,7 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
   
   var resolve: RCTPromiseResolveBlock?
   var reject: RCTPromiseRejectBlock?
+  private var navigationController: UINavigationController?
 
   @objc(payCCAvenue:resolve:reject:)
   public func payCCAvenue(_ arguments: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -27,63 +28,71 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
     private func initiateCCAvenueSDK(arguments: [String: Any]) {
         print("CCAvenue iOS: Received arguments: \(arguments)")
         
-        // 1. Core Parameters
+        // 1. Extract Main Parameters
         let accessCode = arguments["accessCode"] as? String ?? ""
         let currency = arguments["currency"] as? String ?? "INR"
         let amount = arguments["amount"] as? String ?? ""
         let trackingId = arguments["trackingId"] as? String ?? ""
         let requestHash = arguments["requestHash"] as? String ?? ""
+
+        // 2. Extract Optional Parameters
+        let customerId = arguments["customer_id"] as? String ?? ""
+        let paymentType = arguments["payment_type"] as? String ?? "all"
         
-        // 2. Logic & Optional Parameters
-        let customerId = arguments["customerId"] as? String ?? ""
-        let paymentType = arguments["paymentType"] as? String ?? "all"
-        let ignorePaymentType = arguments["ignorePaymentOption"] as? String ?? ""
-        let promoCode = arguments["promoCode"] as? String ?? ""
-        let promoSkuCode = arguments["promoSkuCode"] as? String ?? ""
-        let shouldDisplayPromo = arguments["displayPromo"] as? Bool ?? true
+   
         
-        // 3. UI & Environment
-        let appColor = arguments["appColor"] as? String ?? "#1F46BD"
-        let fontColor = arguments["fontColor"] as? String ?? "#FFFFFF"
+        var ignorePaymentType = ""
+        if let ignoreStr = arguments["ignore_payment_type"] as? String {
+       
+             ignorePaymentType = ignoreStr
+        } else if let ignoreList = arguments["ignore_payment_type"] as? [String] {
+             ignorePaymentType = ignoreList.joined(separator: "|")
+        }
+
+        let displayPromo = arguments["display_promo"] as? String ?? "yes"
+        let promoCode = arguments["promo_code"] as? String ?? ""
+        let promoSkuCode = arguments["promo_sku_code"] as? String ?? ""
         
-        // Enum Mapping: Environment
-        let envString = (arguments["environment"] as? String ?? "LIVE").uppercased()
-        let paymentEnvironment: Enviroment = (envString == "LOCAL") ? .LOCAL : (envString == "STAGING" ? .STAGING : .LIVE)
+        let appColor = arguments["app_color"] as? String ?? "#1F46BD"
+        let fontColor = arguments["font_color"] as? String ?? "#FFFFFF"
         
-        // Enum Mapping: Display Dialog
-        let dialogString = (arguments["displayDialog"] as? String ?? "FULL").uppercased()
-        let displayDialog: DisplayDialog = (dialogString == "DIALOG") ? .DIALOG : .FULL
-        
-        // 4. Handle Nested SIInfo Struct
+        // 3. Environment: "qa", "uat", "production"
+        let envString = arguments["payment_environment"] as? String ?? "production"
+        let paymentEnvironment = envString
+
+        // 4. Display Dialog: "yes", "no"
+        let displayDialog = arguments["displayDialog"] as? String ?? "no"
+
+        // 4. Handle SIInfo Struct
         var siInfoObj: SIInfo? = nil
-        if let siData = arguments["siInfo"] as? [String: Any] {
+        if let siData = arguments["si_info"] as? [String: Any] {
             siInfoObj = SIInfo(
-                siStartDate: siData["si_start_date"] as? String,
-                siEndDate: siData["si_end_date"] as? String,
                 siType: siData["si_type"] as? String,
                 siAmount: siData["si_amount"] as? String,
                 siMerchantRefNo: siData["si_merchant_ref_no"] as? String,
                 siSetupAmount: siData["si_setup_amount"] as? String,
                 siBillCycle: siData["si_bill_cycle"] as? String,
-                siFrequency: siData["si_frequency"] as? String,
                 siFrequencyType: siData["si_frequency_type"] as? String,
+                siFrequencyNo: siData["si_frequency"] as? String,
+                siStartDate: siData["si_start_date"] as? String,
+                siEndDate: siData["si_end_date"] as? String,
                 siUPIMandate: siData["si_upi_mandate"] as? String,
                 siUPIDebitRule: siData["si_upi_debit_rule"] as? String
             )
         }
-        
-        // 5. Create SDK Model
-        let model = CCAvenueOrder(
+
+        // 5. Initialize the Order object
+        let ccAvenueOrder = CCAvenueOrder(
             accessCode: accessCode,
             currency: currency,
             amount: amount,
             trackingId: trackingId,
             requestHash: requestHash,
-            paymentEnviroment: paymentEnvironment, // Matches SDK spelling
+            paymentEnvironment: paymentEnvironment, 
             paymentType: paymentType,
             ignorePaymentType: ignorePaymentType,
             customerId: customerId,
-            displayPromo: shouldDisplayPromo,
+            displayPromo: displayPromo,
             promoCode: promoCode,
             promoSkuCode: promoSkuCode,
             siInfo: siInfoObj,
@@ -97,15 +106,24 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
             guard let window = UIApplication.shared.delegate?.window else { return }
             guard let rootViewController = window?.rootViewController else { return }
             
-            var topController = rootViewController
-            while let presented = topController.presentedViewController {
-                topController = presented
+            let avenueVC = CCAvenueViewController(ccAvenueOrder: ccAvenueOrder, andDelegate: self)
+            
+            // If the app uses a Nav controller, push it; otherwise, present it
+            if let nav = rootViewController as? UINavigationController {
+                self.navigationController = nav
+                nav.pushViewController(avenueVC, animated: true)
+            } else {
+                let navWrapper = UINavigationController(rootViewController: avenueVC)
+                navWrapper.modalPresentationStyle = .overFullScreen
+                navWrapper.view.backgroundColor = .clear
+                // Ensure the navigation bar is also transparent if the SDK doesn't style it
+                navWrapper.navigationBar.setBackgroundImage(UIImage(), for: .default)
+                navWrapper.navigationBar.shadowImage = UIImage()
+                navWrapper.navigationBar.isTranslucent = true
+                navWrapper.view.isOpaque = false
+                
+                rootViewController.present(navWrapper, animated: true, completion: nil)
             }
-
-            let avenueVC = CCAvenueViewController(ccAvenueOrder: model, andDelegate: self)
-            let navWrapper = UINavigationController(rootViewController: avenueVC)
-            navWrapper.modalPresentationStyle = .fullScreen
-            topController.present(navWrapper, animated: true, completion: nil)
         }
     }
     
@@ -114,27 +132,24 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
-            // Dismiss the SDK View Controller
-            if let window = UIApplication.shared.delegate?.window, 
-               let rootViewController = window?.rootViewController {
-                var topController = rootViewController
-                while let presented = topController.presentedViewController {
-                    if let nav = presented as? UINavigationController,
-                       nav.viewControllers.first is CCAvenueViewController {
-                        presented.dismiss(animated: true, completion: nil)
-                        break
-                    }
-                    topController = presented
+            // Close the SDK View
+            if let nav = self.navigationController {
+                nav.popViewController(animated: true)
+                self.navigationController = nil
+            } else {
+                 if let window = UIApplication.shared.delegate?.window, 
+                   let rootViewController = window?.rootViewController {
+                    rootViewController.dismiss(animated: true, completion: nil)
                 }
             }
             
-            // Return Response to React Native Promise
+            // Send raw JSON string back to React Native
             if let responseData = jsonResponse,
                let jsonData = try? JSONSerialization.data(withJSONObject: responseData, options: []),
                let jsonString = String(data: jsonData, encoding: .utf8) {
                 self.resolve?(jsonString)
             } else {
-                self.resolve?("{}")
+                self.resolve?("No response or parsing failed")
             }
             
             self.resolve = nil

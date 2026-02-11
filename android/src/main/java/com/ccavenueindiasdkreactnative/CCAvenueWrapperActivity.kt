@@ -27,42 +27,37 @@ class CCAvenueWrapperActivity : AppCompatActivity(), CCAvenueTransactionCallback
         // 2. Optional / UI Parameters
         val customerId = intent.getStringExtra("customer_id") ?: ""
         val paymentType = intent.getStringExtra("payment_type") ?: "all"
-        val ignorePaymentOption = intent.getStringExtra("ignore_payment_option") ?: ""
+        val ignorePaymentTypeStr = intent.getStringExtra("ignore_payment_type") ?: ""
         val promoCode = intent.getStringExtra("promo_code") ?: ""
         val promoSkuCode = intent.getStringExtra("promo_sku_code") ?: ""
-        val displayDialog = intent.getStringExtra("display_dialog") ?: "FULL"
-        val displayPromo = intent.getBooleanExtra("display_promo", true)
+        val displayDialog = intent.getStringExtra("displayDialog") ?: ""
+        val displayPromo = intent.getStringExtra("display_promo") ?: "yes"
         val appColor = intent.getStringExtra("app_color") ?: "#1F46BD"
         val fontColor = intent.getStringExtra("font_color") ?: "#FFFFFF"
 
         // 3. Environment Mapping
-        val rawEnv = intent.getStringExtra("payment_environment") ?: "LIVE"
-        val paymentEnvironment = when (rawEnv.uppercase()) {
-            "LOCAL" -> "app_local"
-            "STAGING" -> "test"
-            "LIVE" -> "live"
-            else -> "live"
-        }
+        val envString = intent.getStringExtra("payment_environment") ?: "production"
 
         try {
             val orderDetails = CCAvenueOrder()
+            // Core Data
             orderDetails.accessCode = accessCode
             orderDetails.currency = currency
             orderDetails.amount = amount
             orderDetails.trackingId = trackingId
             orderDetails.requestHash = requestHash
-            orderDetails.customerId = customerId
+
+            // Optional Data Mapping
             orderDetails.paymentType = paymentType
-            orderDetails.paymentEnvironment = paymentEnvironment
-            
-            // New Fields
-            orderDetails.ignorePaymentType = ignorePaymentOption
+            orderDetails.ignorePaymentType = ignorePaymentTypeStr
+            orderDetails.customerId = customerId
             orderDetails.promoCode = promoCode
             orderDetails.promoSkuCode = promoSkuCode
-            orderDetails.displayPromo = if (displayPromo) "true" else "false"
+            orderDetails.displayPromo = displayPromo
             orderDetails.displayDialog = displayDialog
             orderDetails.appColor = appColor
             orderDetails.fontColor = fontColor
+            orderDetails.paymentEnvironment =  envString
 
             // 4. Handle Nested SIInfo
             val siMap = intent.getSerializableExtra("si_info") as? Map<String, String?>
@@ -81,7 +76,7 @@ class CCAvenueWrapperActivity : AppCompatActivity(), CCAvenueTransactionCallback
                 
             }
 
-            Log.d("CCAvenueWrapper", "Launching Payment Environment: $paymentEnvironment")
+            Log.d("CCAvenueWrapper", "Launching displayPromo : ${orderDetails.displayPromo}")
             CCAvenueSDK.initTransaction(this, orderDetails)
 
         } catch (e: Exception) {

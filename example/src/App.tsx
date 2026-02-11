@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
   Modal,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
-import { payCCAvenue, PaymentEnvironment } from 'react-native-ccavenue-india-sdk-react-native';
+import { payCCAvenue } from 'react-native-ccavenue-india-sdk-react-native';
 
 export default function App() {
   const [amount, setAmount] = useState('170.00');
@@ -25,23 +25,25 @@ export default function App() {
 
     try {
       const order = {
-        accessCode: "AVRF42ME06BS33FRSB",
+        accessCode: 'AVZC42NB40AS14CZSA',
         amount: amount,
-        currency: "INR",
-        trackingId: "2130000002059981",
-        requestHash: "08ed172268ab0c2cecb597784dd8c8a01b2f846b08d561e4d121b3d1f471a6910abf2fe99d532d1e1f9301bc46656dcfde7237b12bbb31dbc90e38f6b0d9f50a",
-        appColor: "#164880",
-        fontColor: "#FFFFFF",
-        paymentType: "all",
-        environment: PaymentEnvironment.local,
+        currency: 'INR',
+        trackingId: '2130000002076256',
+        requestHash:
+          '092d8f20e8d97690a8caee826850c857864b2cc79df789099876506f7be3379ec251e19f1cc8e3a1e009d7664f64be00290e1100813aa8822378d258a5e1dd6b',
+        appColor: '#164880',
+        fontColor: '#FFFFFF',
+        paymentType: 'wallet',
+        environment: 'qa',
       };
 
       // Call the SDK
       const response = await payCCAvenue(order);
 
-      setResponseData(JSON.stringify(response, null, 2) || "No response received");
+      setResponseData(
+        JSON.stringify(response, null, 2) || 'No response received'
+      );
       setResponseModalVisible(true);
-
     } catch (e: any) {
       setErrorText(`Error: ${e.message || e}`);
       console.error(e);
@@ -79,7 +81,9 @@ export default function App() {
                 placeholder="170.00"
               />
             </View>
-            {errorText ? <Text style={styles.errorText}>{errorText}</Text> : null}
+            {errorText ? (
+              <Text style={styles.errorText}>{errorText}</Text>
+            ) : null}
           </View>
 
           <TouchableOpacity style={styles.button} onPress={initiatePayment}>

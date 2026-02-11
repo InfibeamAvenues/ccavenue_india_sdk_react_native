@@ -89,31 +89,7 @@ allprojects {
             }
         }
 
-        // CCAvenue Tappay SDK
-        maven {
-            name = "GitHubPackagesTappay"
-            url = uri("https://maven.pkg.github.com/uvik-technology/CCAvenue_tappay_sdk")
-            credentials {
-                username = localProperties.getProperty("sdk.username") ?: ""
-                password = localProperties.getProperty("sdk.pwd") ?: ""
-            }
-        }
-
-        // DexGuard Repository
-        maven {
-            url = uri("https://maven.guardsquare.com")
-            credentials {
-                username = localProperties.getProperty("dexguardMavenUser") ?: ""
-                password = localProperties.getProperty("dexguardMavenPassword") ?: ""
-            }
-            content {
-                includeGroupByRegex("com\\.guardsquare.*")
-            }
-            authentication {
-                // 'create' is for Kotlin DSL; in Groovy use 'basic'
-                basic(BasicAuthentication)
-            }
-        }
+       
     }
 }
 
@@ -121,6 +97,6 @@ def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
   implementation "com.facebook.react:react-android"
-  implementation "com.ccavenue.indiasdk:indiasdk-uat:0.0.21"
+  implementation "com.ccavenue.indiasdk:indiasdk-uat:0.0.49"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

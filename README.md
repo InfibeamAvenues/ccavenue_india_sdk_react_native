@@ -99,7 +99,7 @@ const initiatePayment = async () => {
     promoCode: 'PROMO123',                      // Promo Code
     promoSkuCode: 'SKU123',                     // SKU Code
 
-    // Recurring Payments (Optional)
+    // SI Mandate (Optional)
     siInfo: {
       siType: 'FIXED',                          // 'FIXED' | 'ONDEMAND'
       siMerchantRefNo: 'REF123456789',          // Alphanumeric (15 chars)

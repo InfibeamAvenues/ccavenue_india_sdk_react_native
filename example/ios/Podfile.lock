@@ -1,6 +1,6 @@
 PODS:
   - boost (1.84.0)
-  - CcavenueIndiaSdkReactNative (0.1.0):
+  - ccavenue-india-sdk-react-native (0.1.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2482,7 +2482,7 @@ PODS:
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
-  - CcavenueIndiaSdkReactNative (from `../..`)
+  - ccavenue-india-sdk-react-native (from `../..`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -2569,7 +2569,7 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
-  CcavenueIndiaSdkReactNative:
+  ccavenue-india-sdk-react-native:
     :path: "../.."
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
@@ -2727,7 +2727,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
-  CcavenueIndiaSdkReactNative: 0f003b4ac5de3a869bd4e161a95b4eb2984f83bf
+  ccavenue-india-sdk-react-native: aa79744dc6622ee816b0c599d5bcd1bf5b22b3ab
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: a293a88992c4c33f0aee184acab0b64a08ff9458

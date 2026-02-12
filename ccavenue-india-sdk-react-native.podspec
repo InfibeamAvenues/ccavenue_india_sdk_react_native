@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/**/*.{h,m,mm,swift,cpp}"
   s.private_header_files = "ios/**/*.h"
-  s.vendored_frameworks = "ios/CCAvenueIndiaSDK.xcframework", "ios/CommonLibrary.framework"
+  s.vendored_frameworks = "ios/CCAvenueIndiaSDK.xcframework"
 
   s.dependency "React-Core"
   install_modules_dependencies(s)

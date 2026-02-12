@@ -43,7 +43,7 @@ export interface CCAvenueOrderModel {
   customerId?: string;
   paymentType?: string; // "all" | "creditcard" | "debitcard" | "netbanking" | "wallet" | "upi"
   ignorePaymentType?: string[]; // "creditcard" | "debitcard" | "netbanking" | "wallet" | "upi"
-  displayPromo?: string; // "yes" or "no"
+  display_promo?: string; // "yes" or "no"
   appColor?: string;
   fontColor?: string;
   environment?: string; // "qa" or "production" or "uat"
@@ -83,7 +83,7 @@ export const payCCAvenue = (order: CCAvenueOrderModel): Promise<any> => {
     ignore_payment_type: order.ignorePaymentType
       ? order.ignorePaymentType.join('|')
       : '', // Join array to string for native
-    display_promo: order.displayPromo || 'yes',
+    display_promo: order.display_promo || 'yes',
     app_color: order.appColor || '#1F46BD',
     font_color: order.fontColor || '#FFFFFF',
     payment_environment: order.environment || 'production',

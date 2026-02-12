@@ -34,6 +34,8 @@ export default function App() {
         appColor: '#164880',
         fontColor: '#FFFFFF',
         paymentType: 'wallet',
+        display_promo: 'no',
+        displayDialog: 'yes',
         environment: 'qa',
       };
 

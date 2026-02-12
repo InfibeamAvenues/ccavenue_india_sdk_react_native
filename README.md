@@ -176,7 +176,7 @@ const initiatePayment = async () => {
 }
 ```
 
-> **Important:** The `encResponse` should be decrypted on the server-side to extract complete transaction details.
+> **Important:** Always decrypt the encResponse on your server-side to extract and verify complete transaction details securely. The encrypted response contains sensitive payment information that must be processed server-side only.
 
 ## 6. Error Codes
 
@@ -192,8 +192,7 @@ const initiatePayment = async () => {
 | :--- | :--- | :--- | :--- |
 | **accessCode** | String | A unique Access Code provided by CCAvenue for each whitelisted server domain or IP address. Only requests originating from the registered IP/domain are allowed to process transactions. | Yes |
 | **currency** | String | The currency in which the transaction will be processed. Example: "INR" | Yes |
-| **amount** | String | The transaction amount payable by the customer. The value must be a string with two decimal places. Use amount received from Tracking Id Generation API response.
-Example: "100.00" | Yes |
+| **amount** | String | The transaction amount payable by the customer. The value must be a string with two decimal places. Use amount received from Tracking Id Generation API response. Example: "100.00" | Yes |
 | **trackingId** | String | A unique payment reference number received from Tracking Id Generation API response for identifying the transaction. | Yes |
 | **requestHash** | String | Use requestHash received from Tracking Id Generation API response. | Yes |
 | **environment** | String | Payment environment configuration. <br> **Default:** "production" <br> **Possible values:** `production`, `uat` | No |
@@ -208,7 +207,7 @@ Example: "100.00" | Yes |
 | **fontColor** | String | Hex color code used for text and buttons on the payment UI. <br> **Default:** "#FFFFFF" | No |
 | **displayDialog** | String | Determines how the payment UI is presented. <br> **Default:** "no" <br> **Possible values:** <br> no – Full screen payment UI <br> yes – Dialog based UI | No |
 
-> **Important:** The `requestHash` must be generated server-side using SHA-512 encryption with the formula: `trackingId + currency + amount + workingKey`
+ 
 
 ## 8. SI Info Model Parameters
 

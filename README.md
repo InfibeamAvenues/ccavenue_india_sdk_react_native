@@ -1,13 +1,13 @@
-# react-native-ccavenue-india-sdk-react-native
+# ccavenue-india-sdk-react-native
 
 A React Native wrapper for integrating the CCAvenue Payment Gateway (India) on Android and iOS. This plugin supports the latest CCAvenue SDKs.
 
 ## Installation
 
 ```bash
-npm install react-native-ccavenue-india-sdk-react-native
+npm install ccavenue-india-sdk-react-native
 # or
-yarn add react-native-ccavenue-india-sdk-react-native
+yarn add ccavenue-india-sdk-react-native
 ```
 
 ## Android Setup
@@ -66,7 +66,7 @@ cd ios && pod install
 ## Usage
 
 ```javascript
-import { payCCAvenue } from 'react-native-ccavenue-india-sdk-react-native';
+import { payCCAvenue } from 'ccavenue-india-sdk-react-native';
 
 // ...
 
@@ -189,4 +189,8 @@ All parameters are string type.
 | **siUPIMandate** | **Possible values:** `Yes`, `No` | |
 | **siUPIDebitRule** | **Possible values:** `ON`, `before`, `After` | |
 
- 
+
+## License
+ccavenue-india-sdk-react-native is Copyright (c) 2026 Infibeam Avenues Ltd. It is distributed under the MIT License.
+
+We ♥ open source software! See our other supported plugins / SDKs or contact us to help you with integrations.

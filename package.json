@@ -1,5 +1,5 @@
 {
-  "name": "react-native-ccavenue-india-sdk-react-native",
+  "name": "ccavenue-india-sdk-react-native",
   "version": "0.1.0",
   "description": "ccavenue payment gateway",
   "main": "./lib/module/index.js",

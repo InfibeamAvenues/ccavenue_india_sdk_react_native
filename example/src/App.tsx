@@ -10,7 +10,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
-import { payCCAvenue } from 'react-native-ccavenue-india-sdk-react-native';
+import { payCCAvenue } from 'ccavenue-india-sdk-react-native';
 
 export default function App() {
   const [amount, setAmount] = useState('170.00');

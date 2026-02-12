@@ -10060,9 +10060,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-ccavenue-india-sdk-react-native-example@workspace:example":
+"ccavenue-india-sdk-react-native-example@workspace:example":
   version: 0.0.0-use.local
-  resolution: "react-native-ccavenue-india-sdk-react-native-example@workspace:example"
+  resolution: "ccavenue-india-sdk-react-native-example@workspace:example"
   dependencies:
     "@babel/core": "npm:^7.25.2"
     "@babel/preset-env": "npm:^7.25.3"

@@ -126,7 +126,7 @@ const initiatePayment = async () => {
 
 ## 5. SDK Response
 
-### 5.1. Success Response
+### 5.1. Transaction Success Response
 
 ```json
 {
@@ -151,7 +151,7 @@ const initiatePayment = async () => {
 }
 ```
 
-### 5.2. Failure Response
+### 5.2. Transaction Failure Response
 
 ```json
 {
@@ -178,7 +178,7 @@ const initiatePayment = async () => {
 
 > **Important:** Always decrypt the encResponse on your server-side to extract and verify complete transaction details securely. The encrypted response contains sensitive payment information that must be processed server-side only.
 
-## 6. Error Codes
+## 6. Other SDK Error Codes
 
 | Code | Description |
 |------|-------------|

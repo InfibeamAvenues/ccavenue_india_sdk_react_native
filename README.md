@@ -192,9 +192,10 @@ const initiatePayment = async () => {
 | :--- | :--- | :--- | :--- |
 | **accessCode** | String | A unique Access Code provided by CCAvenue for each whitelisted server domain or IP address. Only requests originating from the registered IP/domain are allowed to process transactions. | Yes |
 | **currency** | String | The currency in which the transaction will be processed. Example: "INR" | Yes |
-| **amount** | String | The transaction amount payable by the customer. The value must be a string with two decimal places. Example: "100.00" | Yes |
+| **amount** | String | The transaction amount payable by the customer. The value must be a string with two decimal places. Use amount received from Tracking Id Generation API response.
+Example: "100.00" | Yes |
 | **trackingId** | String | A unique payment reference number received from Tracking Id Generation API response for identifying the transaction. | Yes |
-| **requestHash** | String | A SHA-512 encrypted hash generated using: `trackingId + currency + amount + workingKey`. This is used to validate the integrity of the payment request. | Yes |
+| **requestHash** | String | Use requestHash received from Tracking Id Generation API response. | Yes |
 | **environment** | String | Payment environment configuration. <br> **Default:** "production" <br> **Possible values:** `production`, `uat` | No |
 | **paymentType** | String | Specifies the allowed payment modes. <br> **Default:** "all" <br> **Example values:** <br> "all" – Allow all payment options <br> "card" - Allow both credit and debit cards <br> "creditcard" <br> "debitcard" <br> "netbanking" <br> "wallet" <br> "upi" | No |
 | **ignorePaymentType** | Array | Payment modes to be excluded from the payment screen. <br> **Default:** empty array <br> **Example:** `['wallet']` - wallet will not display on payment screen. <br> **Example:** `['wallet', 'upi']` - wallet and UPI will not display on the payment screen. | No |

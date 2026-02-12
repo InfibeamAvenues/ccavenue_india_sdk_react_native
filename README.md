@@ -19,9 +19,7 @@ In your **project-level** `android/build.gradle` (not app-level), add the follow
 ```gradle
 allprojects {
     repositories {
-        google()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
+        
 
         // 1. CCAvenue SDK 2.0
         maven {
@@ -191,6 +189,4 @@ All parameters are string type.
 | **siUPIMandate** | **Possible values:** `Yes`, `No` | |
 | **siUPIDebitRule** | **Possible values:** `ON`, `before`, `After` | |
 
-## License
-
-MIT
+ 

@@ -169,11 +169,50 @@ const initiatePayment = async () => {
 
 ```json
 {
-    "code": 0,
-    "message": "Success",
-    "data": {
-        "decryptedResponse": "{\"status_message\":\"Transaction is Failed\",\"delivery_address\":\"\",\"response_code\":\"Transaction is Failed\",\"trans_date\":\"2026-02-19 11:16:00.33\",\"status_code\":\"\",\"delivery_name\":\"\",\"billing_address\":\"\",\"failure_message\":\"\",\"bank_ref_no\":\"bsd77d05ec848b\",\"order_status\":\"Unsuccessful\",\"billing_tel\":\"\",\"billing_state\":\"\",\"billing_email\":\"\",\"billing_zip\":\"\",\"currency\":\"INR\",\"merchant_param1\":\"Merchant Param1\",\"merchant_param2\":\"Merchant Param2\",\"merchant_param3\":\"\",\"tracking_id\":\"2130000002080885\",\"merchant_param4\":\"\",\"vault\":\"Y\",\"offer_type\":\"null\",\"retry\":\"N\",\"merchant_param5\":\"Merchant Param5\",\"auth_ref_num\":\"\",\"delivery_country\":\"\",\"payment_mode\":\"Net Banking\",\"amount\":\"170.00\",\"bin_country\":\"\",\"billing_country\":\"\",\"mer_amount\":\"170.00\",\"discount_value\":\"0.0\",\"delivery_state\":\"\",\"bin_supported\":\"\",\"offer_code\":\"null\",\"billing_name\":\"\",\"billing_city\":\"\",\"billing_notes\":\"\",\"eci_value\":\"null\",\"card_name\":\"Avenues Test for New TC\",\"delivery_tel\":\"\",\"order_id\":\"123454321123\",\"delivery_city\":\"\",\"delivery_zip\":\"\"}"
-    }
+  "status_message": "Transaction is Failed",
+  "delivery_address": "",
+  "response_code": "Transaction is Failed",
+  "trans_date": "2026-02-19 11:16:00.33",
+  "status_code": "",
+  "delivery_name": "",
+  "billing_address": "",
+  "failure_message": "",
+  "bank_ref_no": "bsd77d05ec848b",
+  "order_status": "Unsuccessful",
+  "billing_tel": "",
+  "billing_state": "",
+  "billing_email": "",
+  "billing_zip": "",
+  "currency": "INR",
+  "merchant_param1": "Merchant Param1",
+  "merchant_param2": "Merchant Param2",
+  "merchant_param3": "",
+  "tracking_id": "2130000002080885",
+  "merchant_param4": "",
+  "vault": "Y",
+  "offer_type": null,
+  "retry": "N",
+  "merchant_param5": "Merchant Param5",
+  "auth_ref_num": "",
+  "delivery_country": "",
+  "payment_mode": "Net Banking",
+  "amount": "170.00",
+  "bin_country": "",
+  "billing_country": "",
+  "mer_amount": "170.00",
+  "discount_value": "0.0",
+  "delivery_state": "",
+  "bin_supported": "",
+  "offer_code": null,
+  "billing_name": "",
+  "billing_city": "",
+  "billing_notes": "",
+  "eci_value": null,
+  "card_name": "Avenues Test for New TC",
+  "delivery_tel": "",
+  "order_id": "123454321123",
+  "delivery_city_alt": "",
+  "delivery_zip_alt": ""
 }
 ```
 

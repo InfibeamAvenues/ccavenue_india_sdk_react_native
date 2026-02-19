@@ -84,8 +84,8 @@ allprojects {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/InfibeamAvenues/CCAvenue_SDK_2.0_UAT")
             credentials {
-                username = localProperties.getProperty("gpr.usr") ?: "InfibeamAvenues"
-                password = localProperties.getProperty("gpr.key") ?: ""
+                username = localProperties.getProperty("gpr.usr")
+                password = localProperties.getProperty("gpr.key")
             }
         }
 

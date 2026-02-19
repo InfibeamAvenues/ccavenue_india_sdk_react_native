@@ -33,9 +33,9 @@ export default function App() {
           '092d8f20e8d97690a8caee826850c857864b2cc79df789099876506f7be3379ec251e19f1cc8e3a1e009d7664f64be00290e1100813aa8822378d258a5e1dd6b',
         appColor: '#164880',
         fontColor: '#FFFFFF',
-        paymentType: 'wallet',
-        display_promo: 'no',
-        displayDialog: 'yes',
+        paymentType: 'all',
+        display_promo: 'yes',
+        displayDialog: 'no',
         environment: 'qa',
       };
 

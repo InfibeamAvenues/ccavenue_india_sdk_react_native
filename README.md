@@ -96,8 +96,8 @@ const initiatePayment = async () => {
     // Promo/Customer Details
     customerId: 'customer@example.com',         // Customer Identifier
     display_promo: 'yes',                       // 'yes' | 'no' (Default: yes)
-    promoCode: 'PROMO123',                      // Promo Code
-    promoSkuCode: 'SKU123',                     // SKU Code
+    promoCode: '',                      // Promo Code
+    promoSkuCode: '',                     // SKU Code
 
     // SI Mandate (Optional)
     siInfo: {

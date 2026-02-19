@@ -211,7 +211,7 @@ const initiatePayment = async () => {
 > **Important:** The `requestHash` must be generated server-side
  
 
-## 8. SI Info Model Parameters
+## 8. SI Mandate Parameters
 
 All parameters are string type.
 

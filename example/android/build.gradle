@@ -1,0 +1,50 @@
+buildscript {
+    ext {
+        buildToolsVersion = "36.0.0"
+        minSdkVersion = 26
+        compileSdkVersion = 36
+        targetSdkVersion = 36
+        ndkVersion = "27.1.12297006"
+        kotlinVersion = "2.1.20"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    }
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { instr ->
+        localProperties.load(instr)
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+
+        // CCAvenue SDK 2.0
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/InfibeamAvenues/CCAvenue_SDK_2.0")
+            credentials {
+                username = localProperties.getProperty("gpr.usr") ?: "InfibeamAvenues"
+                password = localProperties.getProperty("gpr.key") ?: ""
+            }
+        }
+
+       
+    }
+}
+
+
+apply plugin: "com.facebook.react.rootproject"

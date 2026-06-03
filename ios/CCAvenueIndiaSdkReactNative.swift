@@ -15,7 +15,7 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
   
   var resolve: RCTPromiseResolveBlock?
   var reject: RCTPromiseRejectBlock?
-  private var navigationController: UINavigationController?
+  private var snapshotView: UIView?
 
   @objc(payCCAvenue:resolve:reject:)
   public func payCCAvenue(_ arguments: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -26,76 +26,82 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
   }
     
     private func initiateCCAvenueSDK(arguments: [String: Any]) {
-        print("CCAvenue iOS: Received arguments: \(arguments)")
-        
-        // 1. Extract Main Parameters
-        let accessCode = arguments["accessCode"] as? String ?? ""
-        let encRequest = arguments["encRequest"] as? String ?? ""
-        let appColor = arguments["appColor"] as? String ?? "#1F46BD"
-        let fontColor = arguments["fontColor"] as? String ?? "#FFFFFF"
+        let accessCode         = arguments["accessCode"]          as? String ?? ""
+        let encRequest         = arguments["encRequest"]          as? String ?? ""
+        let appColor           = arguments["appColor"]           as? String ?? "#1F46BD"
+        let fontColor          = arguments["fontColor"]          as? String ?? "#FFFFFF"
         let paymentEnvironment = arguments["paymentEnvironment"] as? String ?? "production"
-     
-        let ccAvenueOrder = CCAvenueOrder(
-            accessCode: accessCode,
-            encRequest: encRequest, 
-            paymentEnvironment: paymentEnvironment, 
-            appColor: appColor,
-            fontColor: fontColor
-        )
-        
-        // 6. Presentation Logic
-        DispatchQueue.main.async {
-            guard let window = UIApplication.shared.delegate?.window else { return }
-            guard let rootViewController = window?.rootViewController else { return }
+
+        NSLog("=== CCAvenue DEBUG ===")
+        NSLog("accessCode: '\(accessCode)'")
+        NSLog("encRequest length: \(encRequest.count)")
+        NSLog("paymentEnvironment: '\(paymentEnvironment)'")
+        NSLog("appColor: '\(appColor)'")
+        NSLog("fontColor: '\(fontColor)'")
+        NSLog("=====================")
+
+        guard !accessCode.isEmpty, !encRequest.isEmpty else {
+            self.reject?("INVALID_PARAMS", "empty params", nil)
+            self.resolve = nil
+            self.reject = nil
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self else { return }
             
-            let avenueVC = CCAvenueViewController(ccAvenueOrder: ccAvenueOrder, andDelegate: self)
-            
-            // If the app uses a Nav controller, push it; otherwise, present it
-            if let nav = rootViewController as? UINavigationController {
-                self.navigationController = nav
-                nav.pushViewController(avenueVC, animated: true)
-            } else {
-                let navWrapper = UINavigationController(rootViewController: avenueVC)
-                navWrapper.modalPresentationStyle = .overFullScreen
-                navWrapper.view.backgroundColor = .clear
-                // Ensure the navigation bar is also transparent if the SDK doesn't style it
-                navWrapper.navigationBar.setBackgroundImage(UIImage(), for: .default)
-                navWrapper.navigationBar.shadowImage = UIImage()
-                navWrapper.navigationBar.isTranslucent = true
-                navWrapper.view.isOpaque = false
-                
-                rootViewController.present(navWrapper, animated: true, completion: nil)
+            let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) ?? UIApplication.shared.keyWindow
+            guard let rootVC = window?.rootViewController else { return }
+
+            NSLog("🚀 About to call CCAvenueOrder init...")
+
+            let model = CCAvenueOrder(
+                accessCode: accessCode,
+                encRequest: encRequest,
+                paymentEnvironment: paymentEnvironment,
+                appColor: appColor,
+                fontColor: fontColor
+            )
+
+            NSLog("✅ CCAvenueOrder created successfully")
+
+            // Take screenshot
+            let renderer = UIGraphicsImageRenderer(bounds: rootVC.view.bounds)
+            let screenshot = renderer.image { ctx in
+                rootVC.view.drawHierarchy(in: rootVC.view.bounds, afterScreenUpdates: false)
             }
+            let snapshot = UIImageView(image: screenshot)
+            snapshot.frame = window?.bounds ?? .zero
+            snapshot.contentMode = .scaleAspectFill
+            window?.addSubview(snapshot)
+            self.snapshotView = snapshot
+
+            NSLog("🚀 About to call CCAvenueSDK.initTransaction...")
+            CCAvenueIndiaSDK.CCAvenueSDK.initTransaction(model, delegate: self, displayController: rootVC)
+            NSLog("✅ CCAvenueSDK.initTransaction called successfully")
         }
     }
     
     // MARK: - CCAvenueDelegate
     public func onTransactionResponse(_ jsonResponse: [AnyHashable : Any]?) {
+        NSLog("💳 Response: \(String(describing: jsonResponse))")
+        let pendingResolve = self.resolve
+        let pendingReject = self.reject
+        self.resolve = nil
+        self.reject = nil
+
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            
-            // Close the SDK View
-            if let nav = self.navigationController {
-                nav.popViewController(animated: true)
-                self.navigationController = nil
-            } else {
-                 if let window = UIApplication.shared.delegate?.window, 
-                   let rootViewController = window?.rootViewController {
-                    rootViewController.dismiss(animated: true, completion: nil)
-                }
-            }
-            
-            // Send raw JSON string back to React Native
+            self.snapshotView?.removeFromSuperview()
+            self.snapshotView = nil
+
             if let responseData = jsonResponse,
                let jsonData = try? JSONSerialization.data(withJSONObject: responseData, options: []),
                let jsonString = String(data: jsonData, encoding: .utf8) {
-                self.resolve?(jsonString)
+                pendingResolve?(jsonString)
             } else {
-                self.resolve?("No response or parsing failed")
+                pendingReject?("PAYMENT_ERROR", "Failed or parsing failed", nil)
             }
-            
-            self.resolve = nil
-            self.reject = nil
         }
     }
 }

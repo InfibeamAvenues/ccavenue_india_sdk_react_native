@@ -9,16 +9,15 @@ const LINKING_ERROR =
 const CCAvenueModule = NativeModules.CCAvenueModule
   ? NativeModules.CCAvenueModule
   : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+    {},
+    {
+      get() {
+        throw new Error(LINKING_ERROR);
+      },
+    }
+  );
 
-export interface CCAvenueOrderModel {
-  // Required fields
+export interface CCAvenueOrderOptions {
   accessCode: string;
   encRequest: string;
   appColor?: string;
@@ -26,15 +25,37 @@ export interface CCAvenueOrderModel {
   paymentEnvironment?: string; // "qa" or "production" or "uat"
 }
 
-export const payCCAvenue = (order: CCAvenueOrderModel): Promise<any> => {
-  // Apply defaults as per the model definition
-  const finalOrder = {
-    accessCode: order.accessCode,
-    encRequest: order.encRequest,
-    appColor: order.appColor || '#1F46BD',
-    fontColor: order.fontColor || '#FFFFFF',
-    paymentEnvironment: order.paymentEnvironment || 'production',
-  };
+export class CCAvenueOrder {
+  accessCode: string;
+  encRequest: string;
+  appColor?: string;
+  fontColor?: string;
+  paymentEnvironment?: string;
 
-  return CCAvenueModule.payCCAvenue(finalOrder);
+  constructor(options: CCAvenueOrderOptions) {
+    this.accessCode = options.accessCode;
+    this.encRequest = options.encRequest;
+    this.appColor = options.appColor;
+    this.fontColor = options.fontColor;
+    this.paymentEnvironment = options.paymentEnvironment;
+  }
+}
+
+export class CCAvenueSDK {
+  initTransaction(order: CCAvenueOrder): Promise<any> {
+    const finalOrder = {
+      accessCode: order.accessCode,
+      encRequest: order.encRequest,
+      appColor: order.appColor || '#1F46BD',
+      fontColor: order.fontColor || '#FFFFFF',
+      paymentEnvironment: order.paymentEnvironment || 'production',
+    };
+
+    return CCAvenueModule.payCCAvenue(finalOrder);
+  }
+}
+
+// Deprecated: Kept for backwards compatibility
+export const payCCAvenue = (order: CCAvenueOrder): Promise<any> => {
+  return new CCAvenueSDK().initTransaction(order);
 };

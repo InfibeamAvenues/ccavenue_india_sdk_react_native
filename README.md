@@ -119,52 +119,53 @@ The merchant needs to import the SDK in the JavaScript/TypeScript file where pay
 initiated:
 
 ```javascript
-import { payCCAvenue } from 'ccavenue-india-sdk-react-native';
+import { CCAvenueSDK, CCAvenueOrder } from 'ccavenue-india-sdk-react-native';
 ```
 
-### 4.2 Create the CCAvenueOrderModel
+### 4.2 Create the CCAvenueOrder
 
 Before starting a transaction, initialize the order object with required order parameters:
 
 ```javascript
-const order = {
+const order = new CCAvenueOrder({
   accessCode: 'ABCD42EF06GH33IJKL',           
   encRequest: 'YOUR_ENCRYPTED_REQUEST',       
   paymentEnvironment: 'production',                  
   appColor: '#1F46BD',                    
   fontColor: '#FFFFFF',                    
-};
+});
 ```
 
-### 4.3 Pass the model to payCCAvenue method
+### 4.3 Initiate the Transaction
 
 ```javascript
-const response = await payCCAvenue(order);
+const response = await new CCAvenueSDK().initTransaction(order);
 ```
 
 ### 4.4 Sample Code
 
 ```javascript
-import { payCCAvenue } from 'ccavenue-india-sdk-react-native';
+import { CCAvenueSDK, CCAvenueOrder } from 'ccavenue-india-sdk-react-native';
 
 const initiatePayment = async () => {
   // 1. Create the Order Model
-  const order = {
+  const order = new CCAvenueOrder({
     accessCode: 'ABCD42EF06GH33IJKL',           
     encRequest: 'YOUR_ENCRYPTED_REQUEST',       
     paymentEnvironment: 'production',                  
     appColor: '#1F46BD',                    
     fontColor: '#FFFFFF',                    
-  };
+  });
 
   try {
     // 2. Initiate Payment
-    const response = await payCCAvenue(order);
+    const response = await new CCAvenueSDK().initTransaction(order);
     console.log('Payment Response (JSON String):', response);
   } catch (error) {
     console.error('Payment Error:', error);
   }
 };
+```
 ```
 
 ## 5. SDK Response

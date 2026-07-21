@@ -31,15 +31,8 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
         let appColor           = arguments["appColor"]           as? String ?? "#1F46BD"
         let fontColor          = arguments["fontColor"]          as? String ?? "#FFFFFF"
         let paymentEnvironment = arguments["paymentEnvironment"] as? String ?? "production"
-
-        NSLog("=== CCAvenue DEBUG ===")
-        NSLog("accessCode: '\(accessCode)'")
-        NSLog("encRequest length: \(encRequest.count)")
-        NSLog("paymentEnvironment: '\(paymentEnvironment)'")
-        NSLog("appColor: '\(appColor)'")
-        NSLog("fontColor: '\(fontColor)'")
-        NSLog("=====================")
-
+        let encryptionMode     = arguments["encryptionMode"]     as? String ?? ""
+ 
         guard !accessCode.isEmpty, !encRequest.isEmpty else {
             self.reject?("INVALID_PARAMS", "empty params", nil)
             self.resolve = nil
@@ -60,7 +53,8 @@ public class CcavenueIndiaSdkReactNative: NSObject, RCTBridgeModule, CCAvenueDel
                 encRequest: encRequest,
                 paymentEnvironment: paymentEnvironment,
                 appColor: appColor,
-                fontColor: fontColor
+                fontColor: fontColor,
+                encryptionMode:encryptionMode,
             )
 
             NSLog("✅ CCAvenueOrder created successfully")

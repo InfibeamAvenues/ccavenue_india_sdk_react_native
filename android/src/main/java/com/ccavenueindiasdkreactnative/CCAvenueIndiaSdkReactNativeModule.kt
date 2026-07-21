@@ -47,6 +47,7 @@ class CcavenueIndiaSdkReactNativeModule(reactContext: ReactApplicationContext) :
             intent.putExtra("paymentEnvironment", if (params.hasKey("paymentEnvironment")) params.getString("paymentEnvironment") else if (params.hasKey("paymentEnvironment")) params.getString("paymentEnvironment") else "production")
             intent.putExtra("appColor", if (params.hasKey("appColor")) params.getString("appColor") else if (params.hasKey("appColor")) params.getString("appColor") else "#1F46BD")
             intent.putExtra("fontColor", if (params.hasKey("fontColor")) params.getString("fontColor") else if (params.hasKey("fontColor")) params.getString("fontColor") else "#FFFFFF")
+            intent.putExtra("encryptionMode", if (params.hasKey("encryptionMode")) params.getString("encryptionMode") else "")
 
             activity.startActivity(intent)
             

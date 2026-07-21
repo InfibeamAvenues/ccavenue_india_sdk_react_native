@@ -23,6 +23,7 @@ export interface CCAvenueOrderOptions {
   appColor?: string;
   fontColor?: string;
   paymentEnvironment?: string; // "qa" or "production" or "uat"
+  encryptionMode?: string;
 }
 
 export class CCAvenueOrder {
@@ -31,6 +32,7 @@ export class CCAvenueOrder {
   appColor?: string;
   fontColor?: string;
   paymentEnvironment?: string;
+  encryptionMode?: string;
 
   constructor(options: CCAvenueOrderOptions) {
     this.accessCode = options.accessCode;
@@ -38,6 +40,7 @@ export class CCAvenueOrder {
     this.appColor = options.appColor;
     this.fontColor = options.fontColor;
     this.paymentEnvironment = options.paymentEnvironment;
+    this.encryptionMode = options.encryptionMode;
   }
 }
 
@@ -49,6 +52,7 @@ export class CCAvenueSDK {
       appColor: order.appColor || '#1F46BD',
       fontColor: order.fontColor || '#FFFFFF',
       paymentEnvironment: order.paymentEnvironment || 'production',
+      encryptionMode: order.encryptionMode || '',
     };
 
     return CCAvenueModule.payCCAvenue(finalOrder);

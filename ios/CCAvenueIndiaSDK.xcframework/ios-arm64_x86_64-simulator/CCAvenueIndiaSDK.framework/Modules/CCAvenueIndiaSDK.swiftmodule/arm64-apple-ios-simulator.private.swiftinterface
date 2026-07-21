@@ -1,7 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.3.2 effective-5.10 (swiftlang-6.3.2.1.108 clang-2100.1.1.101)
-// swift-module-flags: -target arm64-apple-ios15.6-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name CCAvenueIndiaSDK
-// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.2
+// swift-compiler-version: Apple Swift version 6.3.3 effective-5.10 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
+// swift-module-flags: -target arm64-apple-ios13-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name CCAvenueIndiaSDK
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
 import AVFoundation
 import CommonCrypto
 import CoreText
@@ -18,7 +18,7 @@ import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
 @objc public protocol CCAvenueDelegate {
-  @objc func onTransactionResponse(_ jsonResponse: [Swift.AnyHashable : Any]?)
+  @objc func onTransactionResponse(_ jsonResponse: [Swift.String : Any]?)
 }
 public enum IntegrationType : Swift.Int {
   case PAY
@@ -30,7 +30,7 @@ public enum IntegrationType : Swift.Int {
   }
 }
 public struct CCAvenueOrder {
-  public init(accessCode: Swift.String, encRequest: Swift.String, paymentEnvironment: Swift.String = "production", appColor: Swift.String = "#1F46BD", fontColor: Swift.String = "#FFFFFF")
+  public init(accessCode: Swift.String, encRequest: Swift.String, paymentEnvironment: Swift.String = "production", appColor: Swift.String = "#1F46BD", fontColor: Swift.String = "#FFFFFF", encryptionMode: Swift.String = "aes128")
 }
 @objc @_inheritsConvenienceInitializers final public class CCAvenueSDK : ObjectiveC.NSObject {
   public static func initTransaction(_ ccAvenueOrder: CCAvenueIndiaSDK.CCAvenueOrder, delegate: any CCAvenueIndiaSDK.CCAvenueDelegate, displayController: UIKit.UIViewController)
